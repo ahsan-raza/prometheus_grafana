@@ -1,0 +1,112 @@
+# my global config
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: 'my-project'
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  - 'alert.rules'
+  # - "first.rules"
+  # - "second.rules"
+
+# alert
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "alertmanager:9093"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+
+#================================================================================================
+##  - job_name: 'pushgateway'
+##    scrape_interval: 10s
+##    dns_sd_configs:
+##    - names:
+##      - 'tasks.pushgateway'
+##      type: 'A'
+##      port: 9091
+
+
+#=================================================================================================
+  - job_name: 'prometheus'
+
+    # Override the global default and scrape targets from this job every 15 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+         - targets: ['localhost:9090']
+
+#==============Uncomment if you want to get statistics of this Host==========================================
+#  - job_name: 'node-exporter-prometheus'
+#    scrape_interval: 15s
+#    static_configs:
+#         - targets: ['node-exporter:9100']
+
+
+#===============Uncomment if you want to get statistics of Hybrid Chat Host===================================
+  - job_name: 'node-exporter'
+    scrape_interval: 15s
+    static_configs:
+         - targets: ['192.168.2.239:9100']
+
+#===============Uncomment If you want to get the statistics of Containers running on HC Host==============
+  - job_name: 'cadvisor'
+
+    # Override the global default and scrape targets from this job every 15 seconds.
+    scrape_interval: 30s
+    static_configs:
+         - targets: ['192.168.2.239:8080']
+
+#==================If Target URL uses Self Signed Certificates,uncomment `tls_config`entry====================
+  - job_name: 'ccm'
+    scrape_interval: 10s
+    scheme : https
+    metrics_path: /ccm/actuator/prometheus
+    static_configs:
+         - targets: ['devops247.ef.com:443']
+    tls_config:
+      insecure_skip_verify: true
+
+#===========If Target URL uses Self Signed Certificates,uncomment `tls_config`entry====================
+
+  - job_name: 'chat-server'
+    scrape_interval: 10s
+    scheme : https
+    metrics_path: /chat/metrics
+    static_configs:
+         - targets: ['devops247.ef.com:443']
+    tls_config:
+      insecure_skip_verify: true
+
+#======================================================================================================
+  - job_name: 'activemq'
+    scrape_interval: 10s
+    scheme : https
+    metrics_path: /activemq/metrics
+    static_configs:
+         - targets: ['devops247.ef.com:443']
+    tls_config:
+      insecure_skip_verify: true
+
+#===========If Target URL uses Self Signed Certificates,uncomment `tls_config`entry====================
+
+  - job_name: 'db-connector'
+    scrape_interval: 10s
+    scheme : https
+    metrics_path: /database-connector/metrics
+    static_configs:
+         - targets: ['devops247.ef.com:443']
+    tls_config:
+       insecure_skip_verify: true
+
