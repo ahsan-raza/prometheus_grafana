@@ -58,7 +58,7 @@ scrape_configs:
   - job_name: 'node-exporter'
     scrape_interval: 15s
     static_configs:
-         - targets: ['192.168.2.239:9100']
+         - targets: ['192.168.2.242:9100']
 
 #===============Uncomment If you want to get the statistics of Containers running on HC Host==============
   - job_name: 'cadvisor'
@@ -66,7 +66,7 @@ scrape_configs:
     # Override the global default and scrape targets from this job every 15 seconds.
     scrape_interval: 30s
     static_configs:
-         - targets: ['192.168.2.239:8080']
+         - targets: ['192.168.2.242:8080']
 
 #==================If Target URL uses Self Signed Certificates,uncomment `tls_config`entry====================
   - job_name: 'ccm'
@@ -74,7 +74,7 @@ scrape_configs:
     scheme : https
     metrics_path: /ccm/actuator/prometheus
     static_configs:
-         - targets: ['devops247.ef.com:443']
+         - targets: ['devops242.ef.com:443']
     tls_config:
       insecure_skip_verify: true
 
@@ -85,7 +85,7 @@ scrape_configs:
     scheme : https
     metrics_path: /chat/metrics
     static_configs:
-         - targets: ['devops247.ef.com:443']
+         - targets: ['devops242.ef.com:443']
     tls_config:
       insecure_skip_verify: true
 
@@ -95,7 +95,7 @@ scrape_configs:
     scheme : https
     metrics_path: /activemq/metrics
     static_configs:
-         - targets: ['devops247.ef.com:443']
+         - targets: ['devops242.ef.com:443']
     tls_config:
       insecure_skip_verify: true
 
@@ -106,7 +106,19 @@ scrape_configs:
     scheme : https
     metrics_path: /database-connector/metrics
     static_configs:
-         - targets: ['devops247.ef.com:443']
+         - targets: ['devops242.ef.com:443']
     tls_config:
        insecure_skip_verify: true
+#===========If Target URL uses Self Signed Certificates,uncomment `tls_config`entry====================
+  - job_name: 'bot-connector'
+    scrape_interval: 10s
+    scheme : https
+    metrics_path: /bot-connector/metrics
+    static_configs:
+         - targets: ['devops242.ef.com:443']
+    tls_config:
+       insecure_skip_verify: true
+
+
+
 

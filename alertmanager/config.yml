@@ -1,10 +1,27 @@
+global:
+  resolve_timeout: 1m
+
 route:
-  receiver: 'slack'
+  receiver: 'email-notifications'
 
 receivers:
-  - name: 'slack'
-#       slack_configs:
-#           - send_resolved: true
-#             username: '<username>'
-#             channel: '#<channel-name>'
-#             api_url: '<incomming-webhook-url>'
+- name: 'email-notifications'
+  email_configs:
+  - to: nasir.mehmood@expertflow.com
+    from: nasir.mehmood@expertflow.com
+    smarthost: smtp.gmail.com:587
+    auth_username: nasir.mehmood@expertflow.com
+    auth_identity: nasir.mehmood@expertflow.com
+    auth_password: kkgosuvckfsncefk
+    send_resolved: true
+
+####route:
+####  receiver: 'slack'
+####
+####receivers:
+####  - name: 'slack'
+#####       slack_configs:
+#####           - send_resolved: true
+#####             username: '<username>'
+#####             channel: '#<channel-name>'
+#####             api_url: '<incomming-webhook-url>'
