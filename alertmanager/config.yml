@@ -7,7 +7,7 @@ route:
 receivers:
 - name: 'email-notifications'
   email_configs:
-  - to: nasir.mehmood@expertflow.com
+  - to: ahsan.raza@expertflow.com
     from: nasir.mehmood@expertflow.com
     smarthost: smtp.gmail.com:587
     auth_username: nasir.mehmood@expertflow.com

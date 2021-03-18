@@ -1,7 +1,6 @@
 groups:
-- name: example
+- name: targets
   rules:
-
   # Alert for any instance that is unreachable for >2 minutes.
   - alert: service_down
     expr: up == 0
@@ -11,12 +10,58 @@ groups:
     annotations:
       summary: "Instance {{ $labels.instance }} down"
       description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 2 minutes."
-
+- name: host
+  rules:
   - alert: high_load
     expr: node_load1 > 0.9
-    for: 2m
+    for: 1m
     labels:
       severity: page
     annotations:
       summary: "Instance {{ $labels.instance }} under high load"
       description: "{{ $labels.instance }} of job {{ $labels.job }} is under high load."
+  - alert: high_memory_load
+    expr: (sum(node_memory_MemTotal_bytes) - sum(node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes) ) / sum(node_memory_MemTotal_bytes) * 100 > 85
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Server memory is almost full"
+      description: "Docker host memory usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+
+  - alert: high_storage_load
+    expr: (node_filesystem_size_bytes{fstype="aufs"} - node_filesystem_free_bytes{fstype="aufs"}) / node_filesystem_size_bytes{fstype="aufs"}  * 100 > 85
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Server storage is almost full"
+      description: "Docker host storage usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+
+- name: containers
+  rules:  
+  - alert: MRE_Down
+    expr: absent(container_memory_usage_bytes{name="expertflow_mre_1"})
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Mre is down"
+      description: "MRE container is down for more than 30 seconds."
+  - alert: ActiveMQ_high_cpu
+    expr: sum(rate(container_cpu_usage_seconds_total{name="expertflow_activemq_1"}[1m])) / count(node_cpu_seconds_total{mode="system"}) * 100 > 10
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "ActiveMQ high CPU usage"
+      description: "ActiveMQ CPU usage is {{ humanize $value}}%."
+  - alert: chat_server_high_memory
+    expr: sum(container_memory_usage_bytes{name="expertflow_chat_1"}) > 2000000000
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Chat Server high memory usage"
+      description: "Chat Server memory consumption is at {{ humanize $value}}."
+
