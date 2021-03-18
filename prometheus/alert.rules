@@ -40,6 +40,7 @@ groups:
 
 - name: containers
   rules:  
+#Trigger an alert if a container is down for more than 30 seconds:
   - alert: MRE_Down
     expr: absent(container_memory_usage_bytes{name="expertflow_mre_1"})
     for: 30s
@@ -48,6 +49,8 @@ groups:
     annotations:
       summary: "Mre is down"
       description: "MRE container is down for more than 30 seconds."
+
+#Trigger an alert if a container is using more than 10% of total CPU cores for more than 30 seconds:
   - alert: ActiveMQ_high_cpu
     expr: sum(rate(container_cpu_usage_seconds_total{name="expertflow_activemq_1"}[1m])) / count(node_cpu_seconds_total{mode="system"}) * 100 > 10
     for: 30s
@@ -56,6 +59,7 @@ groups:
     annotations:
       summary: "ActiveMQ high CPU usage"
       description: "ActiveMQ CPU usage is {{ humanize $value}}%."
+#Trigger an alert if a container is using more than 2GB of RAM for more than 30 seconds:
   - alert: chat_server_high_memory
     expr: sum(container_memory_usage_bytes{name="expertflow_chat_1"}) > 2000000000
     for: 30s
