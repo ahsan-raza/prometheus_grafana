@@ -68,6 +68,7 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
+      - '--web.external-url=http://devops237.ef.com:9093/'
 #    deploy:
 #      placement:
 #        constraints:
